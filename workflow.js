@@ -190,7 +190,7 @@ $(function () {
         this.addCell(link);
 
         return true;
-    }
+    };
 
     let paper = new joint.dia.Paper({
         el: $('#workarea'),
