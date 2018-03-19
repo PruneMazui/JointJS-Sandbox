@@ -1,8 +1,8 @@
 const Config = {
     POSITION_INCREMENT_X: 10,
     POSITION_INCREMENT_Y: 10,
-    RECT_WIDTH: 100,
-    RECT_HEIGHT: 40
+    RECT_WIDTH: 70,
+    RECT_HEIGHT: 30
 };
 
 let Workflow = {
@@ -40,7 +40,18 @@ let Workflow = {
             block_color: '#ec971f',
             stroke_color: '#d58512',
             source: 'single',
-            target: 'single'
+            target: 'single',
+            canCreate: function () {
+                return $('#nest_wf_id').val().length > 0;
+            },
+            beforeCreate: function (work) {
+                console.log($('#nest_wf_id').val());
+                console.log(work);
+                return work;
+            },
+            onCreated: function () {
+                $('#nest_wf_id').val('');
+            }
         },
         end: {
             text: 'End',
@@ -68,9 +79,16 @@ $(function () {
         });
     };
 
-    graph.addWork = function (data_type) {
+    // ワークの追加
+    graph.createWork = function (data_type) {
         let type_def = Workflow.type_def;
         let target = type_def[data_type];
+
+        if (typeof target.canCreate == "function") {
+            if (!target.canCreate()) {
+                return false;
+            }
+        }
 
         let work = new joint.shapes.basic.Rect({
             position: Workflow.position,
@@ -86,7 +104,7 @@ $(function () {
                 text: {
                     text: target.text,
                     fill: '#ffffff',
-                    'font-size': 18
+                    'font-size': 14
                 }
             }
         });
@@ -96,10 +114,22 @@ $(function () {
             work.prop('attrs/rect/stroke', isSelect ? '#f00' : type_def[work.type].stroke_color);
         };
 
+        if (typeof target.beforeCreate == "function") {
+            work = target.beforeCreate(work);
+            if (work === null || work === false) {
+                return false;
+            }
+        }
+
         Workflow.position.x += Config.POSITION_INCREMENT_X;
         Workflow.position.y += Config.POSITION_INCREMENT_Y;
 
         this.addCell(work);
+
+        if (typeof target.onCreated == "function") {
+            target.onCreated(work);
+        }
+
         return true;
     };
 
@@ -112,6 +142,7 @@ $(function () {
         return connection;
     };
 
+    // コネクションが貼れるか返す
     graph._canConnection = function (source, target) {
         if (source.id == target.id) {
             return false;
@@ -164,6 +195,7 @@ $(function () {
         return true;
     };
 
+    // コネクションを貼る
     graph.addConnection = function (source, target) {
         if (! this._canConnection(source, target)) {
             return false;
@@ -211,7 +243,7 @@ $(function () {
 
     // 追加ボタンイベント
     $('.add_work').on('click', function () {
-        graph.addWork($(this).data('type'));
+        graph.createWork($(this).data('type'));
         updateLinks();
     });
 
@@ -232,6 +264,7 @@ $(function () {
 
     // work操作
     let selected = null;
+
     paper.on('cell:pointerclick', function (cell) {
         graph.resetSelect();
         if (cell.model.prop('type') == 'basic.Rect') {
@@ -260,5 +293,5 @@ $(function () {
     });
 
     // 初期配置
-    graph.addWork('start');
+    graph.createWork('start');
 });
