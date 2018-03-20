@@ -45,8 +45,17 @@ let Workflow = {
                 return $("#nest_wf_id").val().length > 0;
             },
             beforeCreate: function(work) {
-                console.log($("#nest_wf_id").val());
-                console.log(work);
+                let text = work.prop("attrs/text/text");
+                let wk_id = $("#nest_wf_id").val();
+                text += "\n[" + wk_id + "]";
+                work.prop("attrs/text/text", text);
+                work.wk_id = wk_id;
+
+                let size = work.prop("size");
+                size.height += Config.RECT_HEIGHT / 2;
+                size.width += Config.RECT_WIDTH / 2;
+                work.prop("size", size);
+
                 return work;
             },
             onCreated: function() {
@@ -138,7 +147,13 @@ $(function() {
         graph.getCurrentConnection = function() {
             let connection = {};
             $.each(this.getLinks(), function(k, v) {
-                connection[v.prop("source/id")] = v.prop("target/id");
+                let source_id = v.prop("source/id");
+
+                if (!connection[source_id]) {
+                    connection[source_id] = [];
+                }
+
+                connection[source_id].push(v.prop("target/id"));
             });
 
             return connection;
@@ -173,9 +188,15 @@ $(function() {
             if (target_pattern === "single") {
                 let exist_flg = false;
 
-                $.each(current_connection, function(k, v) {
-                    if (v == target.id) {
-                        exist_flg = true;
+                $.each(current_connection, function(i, targets) {
+                    $.each(targets, function(j, v) {
+                        if (v == target.id) {
+                            exist_flg = true;
+                            return false;
+                        }
+                    });
+
+                    if (exist_flg) {
                         return false;
                     }
                 });
@@ -186,11 +207,11 @@ $(function() {
             }
 
             // 既に同じ接続、逆向きがある場合 false
-            if (current_connection[source.id] == target.id) {
+            if (current_connection[source.id] && current_connection[source.id].indexOf(target.id) >= 0) {
                 return false;
             }
 
-            if (current_connection[target.id] == source.id) {
+            if (current_connection[target.id] && current_connection[target.id].indexOf(source.id) >= 0) {
                 return false;
             }
 
@@ -301,6 +322,58 @@ $(function() {
             selected.remove();
         }
         selected = null;
+    });
+
+    // JSON生成
+    $("#generate").on("click", function() {
+        let result = {};
+        let connection = graph.getCurrentConnection();
+
+        let type_count = {};
+        let replace_maps = {};
+
+        $.each(connection, function(source_id, targets) {
+            $.each(targets, function(k, target_id) {
+                $.each([source_id, target_id], function(k, id) {
+                    if (!result[id]) {
+                        let cell = graph.getCell(id);
+                        let type = cell.type;
+                        result[id] = {
+                            type: cell.type,
+                            next: [],
+                            prev: []
+                        };
+
+                        if (cell.wk_id) {
+                            result[id]["wk_id"] = cell.wk_id;
+                        }
+
+                        if (!type_count[type]) {
+                            type_count[type] = 0;
+                        }
+                        type_count[type]++;
+
+                        replace_maps[id] = type.toUpperCase() + type_count[type];
+                    }
+                });
+
+                if (result[source_id]["next"].indexOf(target_id) < 0) {
+                    result[source_id]["next"].push(target_id);
+                }
+
+                if (result[target_id]["prev"].indexOf(source_id) < 0) {
+                    result[target_id]["prev"].push(source_id);
+                }
+            });
+        });
+
+        // @todo バリデーション
+
+        let json = JSON.stringify(result);
+        $.each(replace_maps, function(key, value){
+            json = json.replace(new RegExp(key, 'g'), value);
+        });
+        alert(json);
     });
 
     //=============================================================
