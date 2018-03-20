@@ -3,9 +3,13 @@
 ## これなに？
 
 * Workflow の組み立てをUIから直感的に行うことが可能
-* task_relation の元となる json を組み立てることが可能（未実装）
+* wk_def の元となる json を組み立てることが可能
 
 ## 使い方
+
+### 開く
+
+https://prunemazui.github.io/JointJS-Sandbox/workflow.html
 
 ### タスクの追加
 
@@ -29,5 +33,5 @@
 
 ### json の組み立て
 
-* 未実装
+1. Generateボタンを押下
 
