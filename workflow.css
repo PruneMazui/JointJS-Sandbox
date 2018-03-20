@@ -85,3 +85,16 @@ path.marker-vertex {
     width: 100%;
     margin-bottom: 5px;
 }
+
+.nest-group input {
+    width:56% !important;
+    font-size:10px !important;
+    height:30px !important;
+    margin-right: -4px;
+    ime-mode: disabled;
+}
+
+.nest-group button {
+    width:44% !important;
+    margin-bottom: 0px !important;
+}
