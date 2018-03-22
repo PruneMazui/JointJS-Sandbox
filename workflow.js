@@ -429,7 +429,7 @@ $(function() {
         });
 
         $("#generated-result").text(json_format);
-        $("#generated-json").text(json);
+        $("#generated-json").val(json);
 
         $("#generated-modal").modal("show");
     });
@@ -442,14 +442,25 @@ $(function() {
         var clipboard = new ClipboardJS("#generated-copy");
 
         clipboard.on("success", function(e) {
-            $('#copy-result').show();
-            setTimeout(function() {
-                $('#copy-result').fadeOut('slow');
-            }, 500);
             e.clearSelection();
+            $("#generated-copy").tooltip("show");
         });
+
+        $("#generated-copy").tooltip({
+            title: "Copied to Clipboard!",
+            placement: "top",
+            trigger: "manual"
+        })
+        .on("shown.bs.tooltip", function() {
+            setTimeout(
+                function() {
+                    $(this).tooltip("hide");
+                }.bind(this),
+                2000
+            );
+        })
     } else {
-        $('#generated-copy').hide();
+        $("#generated-copy").hide();
     }
 
     //=============================================================

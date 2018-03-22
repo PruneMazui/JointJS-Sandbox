@@ -129,14 +129,15 @@
                     <h4 class="modal-title" id="generated-modal-label">Generated</h4>
                 </div>
                 <div class="modal-body">
-                    <div style="max-height:400px;overflow:auto;white-space: pre;"><code class="json" id="generated-result">{}</code></div>
+                    <div class="form-inline">
+                        <input type="text" class="form-control" id="generated-json" value="" readonly="readonly">
+                        <button type="button" id="generated-copy" data-clipboard-target="#generated-json" class="btn btn-primary">Copy</button>
+                    </div>
+
+                    <div style="max-height:400px;overflow:auto;white-space: pre;"><code id="generated-result">{}</code></div>
                 </div>
                 <div class="modal-footer">
-                    <code id="copy-result" style="display:none">Copied to Clipboard!</code>
-                    <button type="button" id="generated-copy" data-clipboard-target="#generated-json" class="btn btn-primary">Copy</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-                    <div id="generated-json" style="width: 0; height: 0; padding: 0; border: 0; overflow: hidden;"></div>
                 </div>
             </div>
         </div>
