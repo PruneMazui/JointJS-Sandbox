@@ -95,6 +95,30 @@
 
         <div class="col-sm-10" id="workarea"></div>
     </div>
+
+    <!-- モーダル -->
+    <div class="modal fade" id="generated-modal" tabindex="-1" role="dialog" aria-labelledby="generated-modal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="generated-modal-label">Generated</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="max-height:400px;overflow:auto;white-space: pre;"><code class="json" id="generated-result">{}</code></div>
+                </div>
+                <div class="modal-footer">
+                    <code id="copy-result" style="display:none">Copied to Clipboard!</code>
+                    <button type="button" id="generated-copy" class="btn btn-primary">Copy</button>
+                    <input type="text" id="generated-json" style="width: 0; height: 0; padding: 0; border: 0; overflow: hidden;"  value="">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

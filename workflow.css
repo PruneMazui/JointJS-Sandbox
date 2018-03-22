@@ -15,34 +15,34 @@ body {
     border-collapse: separate;
 }
 
-.inline-group>.inline-item {
+.inline-group > .inline-item {
     display: table-cell;
     float: none;
     width: auto;
     margin-left: -1px;
 }
 
-.inline-group>select.inline-item,
-.inline-group>.btn.inline-item {
+.inline-group > select.inline-item,
+.inline-group > .btn.inline-item {
     margin-bottom: 2px;
 }
 
-.inline-group>.inline-item:first-child:not(:last-child) {
+.inline-group > .inline-item:first-child:not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     margin-left: 0;
 }
 
-.inline-group>.inline-item:not(:first-child):not(:last-child) {
+.inline-group > .inline-item:not(:first-child):not(:last-child) {
     border-radius: 0;
 }
 
-.inline-group>.inline-item:last-child:not(:first-child) {
+.inline-group > .inline-item:last-child:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 
-.inline-group>.inline-item:last-child:not(:first-child) {
+.inline-group > .inline-item:last-child:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
@@ -81,20 +81,21 @@ path.marker-vertex {
     display: none;
 }
 
-.button-set .btn, .button-set div{
+.button-set .btn,
+.button-set div {
     width: 100%;
     margin-bottom: 5px;
 }
 
 .nest-group input {
-    width:56% !important;
-    font-size:10px !important;
-    height:30px !important;
+    width: 56% !important;
+    font-size: 10px !important;
+    height: 30px !important;
     margin-right: -4px;
     ime-mode: disabled;
 }
 
 .nest-group button {
-    width:44% !important;
+    width: 44% !important;
     margin-bottom: 0px !important;
 }

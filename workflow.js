@@ -353,7 +353,7 @@ $(function() {
                         }
                         type_count[type]++;
 
-                        replace_maps[id] = type.toUpperCase() + type_count[type];
+                        replace_maps[id] = "__" + type.toUpperCase() + type_count[type];
                     }
                 });
 
@@ -370,10 +370,32 @@ $(function() {
         // @todo バリデーション
 
         let json = JSON.stringify(result);
+        let json_format = JSON.stringify(result, null, "    ");
+
         $.each(replace_maps, function(key, value){
-            json = json.replace(new RegExp(key, 'g'), value);
+            let regex = new RegExp(key, 'g');
+            json_format = json_format.replace(regex, value);
+            json = json.replace(regex, value);
         });
-        alert(json);
+
+        $('#generated-result').text(json_format);
+        $('#generated-json').val(json);
+
+        $('#generated-modal').modal('show');
+    });
+
+    //============================================================
+    // その他イベント
+
+    // コピーボタン
+    $('#generated-copy').on('click', function(){
+        $('#generated-json').select();
+        document.execCommand('copy');
+
+        $('#copy-result').show();
+        setTimeout(function() {
+            $('#copy-result').fadeOut('slow');
+        }, 500);
     });
 
     //=============================================================
