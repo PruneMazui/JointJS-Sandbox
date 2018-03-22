@@ -437,16 +437,20 @@ $(function() {
     //============================================================
     // その他イベント
 
-    // コピーボタン
-    var clipboard = new ClipboardJS("#generated-copy");
+    if (ClipboardJS.isSupported()) {
+        // コピーボタン
+        var clipboard = new ClipboardJS("#generated-copy");
 
-    clipboard.on("success", function(e) {
-        $('#copy-result').show();
-        setTimeout(function() {
-            $('#copy-result').fadeOut('slow');
-        }, 500);
-        e.clearSelection();
-    });
+        clipboard.on("success", function(e) {
+            $('#copy-result').show();
+            setTimeout(function() {
+                $('#copy-result').fadeOut('slow');
+            }, 500);
+            e.clearSelection();
+        });
+    } else {
+        $('#generated-copy').hide();
+    }
 
     //=============================================================
     // 初期配置
