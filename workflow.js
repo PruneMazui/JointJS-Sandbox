@@ -87,6 +87,8 @@ $(function() {
             });
         };
 
+        graph.type_count = {};
+
         // ワークの追加
         graph.createWork = function(data_type) {
             let type_def = Workflow.type_def;
@@ -97,6 +99,11 @@ $(function() {
                     return false;
                 }
             }
+
+            if (!graph.type_count[data_type]) {
+                graph.type_count[data_type] = 0;
+            }
+            graph.type_count[data_type]++;
 
             let work = new joint.shapes.basic.Rect({
                 position: Workflow.position,
@@ -110,7 +117,7 @@ $(function() {
                         ry: "4px"
                     },
                     text: {
-                        text: target.text,
+                        text: target.text + graph.type_count[data_type],
                         fill: "#ffffff",
                         "font-size": 14
                     }
@@ -118,6 +125,8 @@ $(function() {
             });
 
             work.type = data_type;
+            work.name = target.text + graph.type_count[data_type];
+
             work.changeSelect = function(isSelect) {
                 work.prop(
                     "attrs/rect/stroke",
@@ -367,7 +376,39 @@ $(function() {
             });
         });
 
-        // @todo バリデーション
+        // バリデーション
+        let messages = [];
+
+        $.each(graph.getCells(), function (k, cell){
+            if (! cell.type) {
+                return;
+            }
+
+            if (! result[cell.id]) {
+                messages.push(cell.name + " が接続されていません")
+            }
+        });
+
+        $.each(result, function (id, row_result) {
+            let cell = graph.getCell(id);
+            let def = Workflow.type_def[cell.type];
+            if (def.target !== false && row_result.prev.length <= 0) {
+                messages.push(cell.name + " の接続元が指定されていません");
+            }
+
+            if (def.source !== false && row_result.next.length <= 0) {
+                messages.push(cell.name + " の接続先が指定されていません");
+            }
+        });
+
+        if (messages.length > 0) {
+            $('#error-messages').text('');
+            $.each(messages, function(k, msg){
+                $('<li></li>').html(msg).appendTo($('#error-messages'));
+            });
+            $('#error-modal').modal('show');
+            return;
+        }
 
         let json = JSON.stringify(result);
         let json_format = JSON.stringify(result, null, "    ");
