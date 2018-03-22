@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.0.1/joint.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.0.1/joint.min.js"></script>
 
+    <!-- clipboard -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+
     <!-- main -->
     <link rel="stylesheet" href="./workflow.css">
     <script src="./workflow.js"></script>
@@ -130,9 +133,10 @@
                 </div>
                 <div class="modal-footer">
                     <code id="copy-result" style="display:none">Copied to Clipboard!</code>
-                    <button type="button" id="generated-copy" class="btn btn-primary">Copy</button>
-                    <input type="text" id="generated-json" style="width: 0; height: 0; padding: 0; border: 0; overflow: hidden;"  value="">
+                    <button type="button" id="generated-copy" data-clipboard-target="#generated-json" class="btn btn-primary">Copy</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    <div id="generated-json" style="width: 0; height: 0; padding: 0; border: 0; overflow: hidden;"></div>
                 </div>
             </div>
         </div>

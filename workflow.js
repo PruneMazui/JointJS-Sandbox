@@ -216,11 +216,17 @@ $(function() {
             }
 
             // 既に同じ接続、逆向きがある場合 false
-            if (current_connection[source.id] && current_connection[source.id].indexOf(target.id) >= 0) {
+            if (
+                current_connection[source.id] &&
+                current_connection[source.id].indexOf(target.id) >= 0
+            ) {
                 return false;
             }
 
-            if (current_connection[target.id] && current_connection[target.id].indexOf(source.id) >= 0) {
+            if (
+                current_connection[target.id] &&
+                current_connection[target.id].indexOf(source.id) >= 0
+            ) {
                 return false;
             }
 
@@ -362,7 +368,8 @@ $(function() {
                         }
                         type_count[type]++;
 
-                        replace_maps[id] = "__" + type.toUpperCase() + type_count[type];
+                        replace_maps[id] =
+                            "__" + type.toUpperCase() + type_count[type];
                     }
                 });
 
@@ -379,17 +386,17 @@ $(function() {
         // バリデーション
         let messages = [];
 
-        $.each(graph.getCells(), function (k, cell){
-            if (! cell.type) {
+        $.each(graph.getCells(), function(k, cell) {
+            if (!cell.type) {
                 return;
             }
 
-            if (! result[cell.id]) {
-                messages.push(cell.name + " が接続されていません")
+            if (!result[cell.id]) {
+                messages.push(cell.name + " が接続されていません");
             }
         });
 
-        $.each(result, function (id, row_result) {
+        $.each(result, function(id, row_result) {
             let cell = graph.getCell(id);
             let def = Workflow.type_def[cell.type];
             if (def.target !== false && row_result.prev.length <= 0) {
@@ -402,41 +409,43 @@ $(function() {
         });
 
         if (messages.length > 0) {
-            $('#error-messages').text('');
-            $.each(messages, function(k, msg){
-                $('<li></li>').html(msg).appendTo($('#error-messages'));
+            $("#error-messages").text("");
+            $.each(messages, function(k, msg) {
+                $("<li></li>")
+                    .html(msg)
+                    .appendTo($("#error-messages"));
             });
-            $('#error-modal').modal('show');
+            $("#error-modal").modal("show");
             return;
         }
 
         let json = JSON.stringify(result);
         let json_format = JSON.stringify(result, null, "    ");
 
-        $.each(replace_maps, function(key, value){
-            let regex = new RegExp(key, 'g');
+        $.each(replace_maps, function(key, value) {
+            let regex = new RegExp(key, "g");
             json_format = json_format.replace(regex, value);
             json = json.replace(regex, value);
         });
 
-        $('#generated-result').text(json_format);
-        $('#generated-json').val(json);
+        $("#generated-result").text(json_format);
+        $("#generated-json").text(json);
 
-        $('#generated-modal').modal('show');
+        $("#generated-modal").modal("show");
     });
 
     //============================================================
     // その他イベント
 
     // コピーボタン
-    $('#generated-copy').on('click', function(){
-        $('#generated-json').select();
-        document.execCommand('copy');
+    var clipboard = new ClipboardJS("#generated-copy");
 
+    clipboard.on("success", function(e) {
         $('#copy-result').show();
         setTimeout(function() {
             $('#copy-result').fadeOut('slow');
         }, 500);
+        e.clearSelection();
     });
 
     //=============================================================
